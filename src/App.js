@@ -10,7 +10,16 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetch_data } from "./redux/actions/actions";
-import { LineChart, YAxis, XAxis, CartesianGrid, Line } from "recharts";
+import {
+  LineChart,
+  YAxis,
+  XAxis,
+  CartesianGrid,
+  Line,
+  AreaChart,
+  Tooltip,
+  Area
+} from "recharts";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,12 +71,62 @@ function App() {
         >
           Search
         </Button>
-        <Box sx={{ mt: 2, bgcolor: "red", width: "100%" }}>
-          {fetched_data ? (
-            fetched_data.map((el, index) => <Box>{el.Deaths}</Box>)
-          ) : (
-            <></>
-          )}
+        <Box sx={{ mt: 2, width: "100%" }}>
+          <LineChart width={1500} height={250} data={fetched_data}>
+            <Line type="monotone" dataKey="Deaths" stroke="red" />
+            <Line type="monotone" dataKey="Confirmed" stroke="orange" />
+            <Line type="monotone" dataKey="Recovered" stroke="green" />
+            <CartesianGrid stroke="#ccc" />
+            <XAxis dataKey="Date" />
+            <YAxis />
+          </LineChart>
+
+          <AreaChart
+            width={1500}
+            height={250}
+            data={fetched_data}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="deaths" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="confirmed" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="recovered" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#de6262" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#ffb88c" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="Date" />
+            <YAxis />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="Deaths"
+              stroke="#8884d8"
+              fillOpacity={1}
+              fill="url(#deaths)"
+            />
+            <Area
+              type="monotone"
+              dataKey="Confirmed"
+              stroke="#82ca9d"
+              fillOpacity={1}
+              fill="url(#confirmed)"
+            />
+            <Area
+              type="monotone"
+              dataKey="Recovered"
+              stroke="#de6262"
+              fillOpacity={1}
+              fill="url(#recovered)"
+            />
+          </AreaChart>
         </Box>
       </Box>
     </>
